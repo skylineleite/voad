@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vídeo of a Down - Download de Vídeos e Áudios</title>
+  <!-- Google Fonts: Inter & Metal Mania/Oswald vibe -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --bg-dark: #0f0f13;
+      --card-bg: #1a1a24;
+      --card-border: #2a2a3c;
+      --primary-red: #e63946;
+      --accent-purple: #805ad5;
+      --text-main: #f7fafc;
+      --text-muted: #a0aec0;
+      --input-bg: #14141d;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 2rem 1rem;
+    }
+
+    header {
+      text-align: center;
+      margin-top: 2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .brand-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 3.2rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #ff416c, #8a2387);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .brand-title i {
+      -webkit-text-fill-color: initial;
+      color: var(--primary-red);
+      font-size: 2.8rem;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .main-container {
+      width: 100%;
+      max-width: 680px;
+    }
+
+    /* URL Bar Container */
+    .search-box {
+      display: flex;
+      align-items: center;
+      background-color: var(--input-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    .search-box:focus-within {
+      border-color: var(--primary-red);
+      box-shadow: 0 0 15px rgba(230, 57, 70, 0.4);
+    }
+
+    .icon-left {
+      width: 54px;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      border-right: 1px solid rgba(255,255,255,0.05);
+      transition: color 0.3s ease;
+    }
+
+    .input-url {
+      flex: 1;
+      height: 54px;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 1rem;
+      padding: 0 1rem;
+    }
+
+    .input-url::placeholder {
+      color: var(--text-muted);
+    }
+
+    .btn-download {
+      width: 58px;
+      height: 54px;
+      background: linear-gradient(135deg, var(--primary-red), #b91c1c);
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease, transform 0.1s ease;
+    }
+
+    .btn-download:hover {
+      filter: brightness(1.1);
+    }
+
+    .btn-download:active {
+      transform: scale(0.96);
+    }
+
+    /* Platform Icon Colors */
+    .fa-youtube { color: #FF0000; }
+    .fa-tiktok { color: #00f2fe; }
+    .fa-instagram { color: #E1306C; }
+    .fa-dailymotion { color: #0066DC; }
+    .fa-twitch { color: #9146FF; }
+    .fa-vimeo-v { color: #1AB7EA; }
+    .fa-camera-retro { color: #05A081; } /* Pexels */
+    .fa-images { color: #02A200; } /* Pixabay */
+
+    /* Supported Platforms Badge List */
+    .supported-platforms {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .platform-badge {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.04);
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Preview Section */
+    .result-section {
+      margin-top: 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: none;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+    }
+
+    .result-section.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .preview-card {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .thumbnail-wrapper {
+      position: relative;
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      background: #000;
+    }
+
+    .thumbnail-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .video-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .video-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .download-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 0.8rem;
+    }
+
+    .btn-action {
+      padding: 0.8rem;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-video {
+      background: var(--primary-red);
+      color: white;
+    }
+
+    .btn-audio {
+      background: #2b2b3d;
+      color: white;
+      border: 1px solid var(--card-border);
+    }
+
+    .btn-action:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.15);
+    }
+
+    /* Backend Warning Banner */
+    .notice-box {
+      background: rgba(128, 90, 213, 0.1);
+      border: 1px solid rgba(128, 90, 213, 0.3);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.8rem;
+      color: #d6bcfa;
+      margin-top: 1rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    footer {
+      margin-top: auto;
+      padding-top: 3rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    @media (max-width: 480px) {
+      .download-actions {
+        grid-template-columns: 1fr;
+      }
+      .brand-title {
+        font-size: 2.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 class="brand-title">
+      <i class="fa-solid fa-compact-disc fa-spin" style="--fa-animation-duration: 8s;"></i>
+      Vídeo of a Down
+    </h1>
+    <p class="subtitle">Baixe vídeos e áudios das suas redes sociais favoritas num estalo.</p>
+  </header>
+
+  <main class="main-container">
+    <!-- Input Field -->
+    <div class="search-box">
+      <div class="icon-left" id="iconLeft">
+        <i class="fa-solid fa-link"></i>
+      </div>
+      <input 
+        type="text" 
+        id="urlInput" 
+        class="input-url" 
+        placeholder="Cole a URL do vídeo aqui..." 
+        autocomplete="off"
+      />
+      <button class="btn-download" id="btnSubmit" title="Processar vídeo">
+        <i class="fa-solid fa-download"></i>
+      </button>
+    </div>
+
+    <!-- Supported Platforms List -->
+    <div class="supported-platforms">
+      <span class="platform-badge"><i class="fa-brands fa-youtube" style="color:#FF0000;"></i> YouTube</span>
+      <span class="platform-badge"><i class="fa-brands fa-tiktok" style="color:#00f2fe;"></i> TikTok</span>
+      <span class="platform-badge"><i class="fa-brands fa-instagram" style="color:#E1306C;"></i> Instagram</span>
+      <span class="platform-badge"><i class="fa-brands fa-dailymotion" style="color:#0066DC;"></i> Dailymotion</span>
+      <span class="platform-badge"><i class="fa-brands fa-twitch" style="color:#9146FF;"></i> Twitch</span>
+      <span class="platform-badge"><i class="fa-brands fa-vimeo-v" style="color:#1AB7EA;"></i> Vimeo</span>
+      <span class="platform-badge"><i class="fa-solid fa-camera-retro" style="color:#05A081;"></i> Pexels</span>
+      <span class="platform-badge"><i class="fa-solid fa-images" style="color:#02A200;"></i> Pixabay</span>
+    </div>
+
+    <!-- Result / Reveal Box -->
+    <div class="result-section" id="resultSection">
+      <div class="preview-card">
+        <div class="thumbnail-wrapper">
+          <img id="thumbImg" src="" alt="Miniatura do Vídeo" class="thumbnail-img">
+        </div>
+        <div class="video-info">
+          <h2 class="video-title" id="videoTitle">Título do Vídeo</h2>
+          <span class="video-meta" id="videoMeta">Origem: <strong id="platformName">--</strong></span>
+        </div>
+        <div class="download-actions">
+          <a id="btnDownloadVideo" href="#" class="btn-action btn-video" target="_blank">
+            <i class="fa-solid fa-video"></i> Baixar Vídeo (MP4)
+          </a>
+          <a id="btnDownloadAudio" href="#" class="btn-action btn-audio" target="_blank">
+            <i class="fa-solid fa-music"></i> Baixar Áudio (MP3)
+          </a>
+        </div>
+
+        <div class="notice-box">
+          <i class="fa-solid fa-circle-info" style="margin-top: 2px;"></i>
+          <span><strong>Nota:</strong> Para o download direto de áudio/vídeo funcionar em produção no GitHub Pages, conecte este frontend à sua API backend (ex: FastAPI + yt-dlp hospedado no Render/Railway).</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Vídeo of a Down &copy; 2026 — Feito para fãs de boa música e praticidade.</p>
+  </footer>
+
+  <script>
+    const urlInput = document.getElementById('urlInput');
+    const iconLeft = document.getElementById('iconLeft');
+    const btnSubmit = document.getElementById('btnSubmit');
+    const resultSection = document.getElementById('resultSection');
+
+    // Platform configurations
+    const platforms = [
+      { name: 'YouTube', regex: /youtube\.com|youtu\.be/, iconClass: 'fa-brands fa-youtube', colorClass: 'fa-youtube' },
+      { name: 'TikTok', regex: /tiktok\.com/, iconClass: 'fa-brands fa-tiktok', colorClass: 'fa-tiktok' },
+      { name: 'Instagram', regex: /instagram\.com/, iconClass: 'fa-brands fa-instagram', colorClass: 'fa-instagram' },
+      { name: 'Dailymotion', regex: /dailymotion\.com|dai\.ly/, iconClass: 'fa-brands fa-dailymotion', colorClass: 'fa-dailymotion' },
+      { name: 'Twitch', regex: /twitch\.tv/, iconClass: 'fa-brands fa-twitch', colorClass: 'fa-twitch' },
+      { name: 'Vimeo', regex: /vimeo\.com/, iconClass: 'fa-brands fa-vimeo-v', colorClass: 'fa-vimeo-v' },
+      { name: 'Pexels', regex: /pexels\.com/, iconClass: 'fa-solid fa-camera-retro', colorClass: 'fa-camera-retro' },
+      { name: 'Pixabay', regex: /pixabay\.com/, iconClass: 'fa-solid fa-images', colorClass: 'fa-images' }
+    ];
+
+    // Detect platform on input
+    urlInput.addEventListener('input', () => {
+      const url = urlInput.value.trim();
+      const detected = platforms.find(p => p.regex.test(url));
+
+      if (detected) {
+        iconLeft.innerHTML = `<i class="${detected.iconClass} ${detected.colorClass}"></i>`;
+      } else {
+        iconLeft.innerHTML = `<i class="fa-solid fa-link"></i>`;
+      }
+    });
+
+    // Trigger reveal on click
+    btnSubmit.addEventListener('click', processUrl);
+    urlInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') processUrl();
+    });
+
+    function processUrl() {
+      const url = urlInput.value.trim();
+      if (!url) return;
+
+      const detected = platforms.find(p => p.regex.test(url));
+      const platformName = detected ? detected.name : 'Mídia Externa';
+
+      // Mock preview data for demonstration
+      document.getElementById('videoTitle').innerText = "Vídeo Detectado: " + (url.length > 40 ? url.substring(0, 40) + "..." : url);
+      document.getElementById('platformName').innerText = platformName;
+      document.getElementById('thumbImg').src = "https://picsum.photos/640/360?random=" + Math.floor(Math.random() * 100);
+
+      // Reveal section & smooth scroll
+      resultSection.classList.add('active');
+      setTimeout(() => {
+        resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 100);
+    }
+  </script>
+</body>
+</html>
