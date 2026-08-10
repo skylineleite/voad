@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VOAD - Video of a Down</title>
+  <title>Vídeo of a Down - Download de Vídeos e Áudios</title>
+  
+  <!-- Favicon com a imagem da mão do álbum do SOAD -->
+  <link rel="icon" type="image/jpeg" href="https://upload.wikimedia.org/wikipedia/en/2/22/SystemofaDownSystemofaDown.jpg">
+  
   <!-- Google Fonts: Inter & Oswald -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,7 +47,7 @@
 
     header {
       text-align: center;
-      margin-top: 2rem;
+      margin-top: 1.5rem;
       margin-bottom: 2.5rem;
     }
 
@@ -58,13 +62,45 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      gap: 16px;
+      flex-wrap: wrap;
     }
 
-    .brand-title i {
-      -webkit-text-fill-color: initial;
-      color: var(--primary-red);
-      font-size: 2.8rem;
+    /* Vinil estilizado com a imagem da mão no centro */
+    .vinyl-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background-image: url('https://upload.wikimedia.org/wikipedia/en/2/22/SystemofaDownSystemofaDown.jpg');
+      background-size: cover;
+      background-position: center;
+      box-shadow: 
+        0 0 0 3px #111,
+        0 0 0 5px #333,
+        0 0 10px rgba(0,0,0,0.8),
+        inset 0 0 0 4px rgba(0, 0, 0, 0.4);
+      position: relative;
+      animation: vinyl-spin 6s linear infinite;
+      flex-shrink: 0;
+    }
+
+    /* Furo central do vinil */
+    .vinyl-icon::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      background-color: var(--bg-dark);
+      border: 2px solid #222;
+      border-radius: 50%;
+    }
+
+    @keyframes vinyl-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
     .subtitle {
@@ -296,7 +332,11 @@
         grid-template-columns: 1fr;
       }
       .brand-title {
-        font-size: 2.4rem;
+        font-size: 2.2rem;
+      }
+      .vinyl-icon {
+        width: 40px;
+        height: 40px;
       }
     }
   </style>
@@ -305,10 +345,10 @@
 
   <header>
     <h1 class="brand-title">
-      <i class="fa-solid fa-compact-disc fa-spin" style="--fa-animation-duration: 8s;"></i>
-      VOAD
+      <div class="vinyl-icon"></div>
+      Vídeo of a Down
     </h1>
-    <p class="subtitle">Video of a Down — Baixe vídeos e áudios num estalo.</p>
+    <p class="subtitle">Baixe vídeos e áudios num estalo.</p>
   </header>
 
   <main class="main-container">
@@ -368,11 +408,11 @@
   </main>
 
   <footer>
-    <p>VOAD &copy; 2026 — Video of a Down | Feito para praticidade.</p>
+    <p>Vídeo of a Down &copy; 2026 | Feito para praticidade.</p>
   </footer>
 
   <script>
-    const API_URL = "https://voad-api.onrender.com"; // Link oficial da API no Render
+    const API_URL = "https://voad-api.onrender.com";
 
     const urlInput = document.getElementById('urlInput');
     const iconLeft = document.getElementById('iconLeft');
@@ -392,7 +432,6 @@
       { name: 'Pixabay', regex: /pixabay\.com/, iconClass: 'fa-solid fa-images', colorClass: 'fa-images' }
     ];
 
-    // Identify platform dynamically
     urlInput.addEventListener('input', () => {
       const url = urlInput.value.trim();
       const detected = platforms.find(p => p.regex.test(url));
@@ -429,7 +468,6 @@
             document.getElementById('thumbImg').src = data.thumbnail;
           }
 
-          // Atribui o link retornado pela API
           document.getElementById('btnDownloadVideo').href = data.download_url;
           document.getElementById('btnDownloadAudio').href = data.download_url;
 
